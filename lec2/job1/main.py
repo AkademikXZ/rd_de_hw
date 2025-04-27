@@ -2,11 +2,15 @@ import os
 from flask import Flask, request
 from flask import typing as flask_typing
 from dotenv import load_dotenv
-
+import sys
 from bll.sales_api import save_sales_to_local_disk
 
 load_dotenv()
 AUTH_TOKEN = os.environ.get("API_AUTH_TOKEN")
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
+sys.path.append(BASE_DIR)
+os.chdir(BASE_DIR)
 
 if not AUTH_TOKEN:
     print("API_AUTH_TOKEN environment variable must be set")

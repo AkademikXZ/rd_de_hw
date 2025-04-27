@@ -5,9 +5,11 @@ import json
 from pathlib import Path
 
 AUTH_TOKEN = os.environ.get("API_AUTH_TOKEN")
-print(AUTH_TOKEN)
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  # вихід у lec2/
+
 def save_sales_to_local_disk(date: str, raw_dir: str) -> None:
-    raw_path = Path(raw_dir)
+    raw_path = BASE_DIR / raw_dir
 
     if raw_path.exists():
         shutil.rmtree(raw_path)
@@ -16,8 +18,11 @@ def save_sales_to_local_disk(date: str, raw_dir: str) -> None:
     page = 1
     while True:
         url = f"https://fake-api-vycpfa6oca-uc.a.run.app/sales?date={date}&page={page}"
-        headers = {"Authorization": f"Bearer {AUTH_TOKEN}"}
+        headers = {"Authorization": AUTH_TOKEN}
         response = requests.get(url, headers=headers)
+
+        if response.status_code == 404:
+            break
 
         if response.status_code != 200:
             raise Exception(f"API error: {response.status_code} {response.text}")
